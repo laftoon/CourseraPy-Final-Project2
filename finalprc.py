@@ -3,14 +3,14 @@ import operator
 import csv
 import sys 
 
-error_log = {}
+error_log = {}  #create dictionaries that will store the stats
 user_log = {}
 
-log_file = 'finalprc.txt'
+log_file = 'finalprc.txt'  #rename as needed for log file and destinations
 user_stats = 'user_stats.txt'
 error_stats = 'error_stats.txt'
 
-pattern = r'(?P<messageType>INFO|ERROR):?\s*(?P<message>.*?)\((?P<username>\w+?.\w+)\)$'
+pattern = r'(?P<messageType>INFO|ERROR):?\s*(?P<message>.*?)\((?P<username>\w+?.\w+)\)$'  #regex universal pattern grouping
 
 
 
@@ -19,7 +19,7 @@ with open(log_file, 'r') as f:
     for line in f.readlines():
         result = re.search(pattern, line)
         if result:
-            message_type = result.group('messageType')
+            message_type = result.group('messageType')  #extract data and group it 
             message = result.group('message')
             username = result.group('username')
             if message_type == 'ERROR':
@@ -29,10 +29,10 @@ with open(log_file, 'r') as f:
             else:
                 user_log.setdefault(username, [0, 0])[0] +=1
 
-sorted_error_stats=sorted(error_log.items(), key = operator.itemgetter(1), reverse = True )
+sorted_error_stats=sorted(error_log.items(), key = operator.itemgetter(1), reverse = True )  #sort data as required
 sorted_user_stats = sorted(user_log.items())
 
-with open(user_stats, 'w', newline='') as ereport:
+with open(user_stats, 'w', newline='') as ereport:  #export reports
     writer = csv.writer(ereport)
     writer.writerow(["Error", "Count"])
     writer.writerows(sorted_error_stats)
